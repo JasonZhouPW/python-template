@@ -237,7 +237,6 @@ def transferFrom(spender,from_acct,to_acct,amount):
     approveKey = concat(concat(APPROVE_PREFIX,from_acct),spender)
     approvedAmount = Get(ctx,approveKey)
     toKey = concat(BALANCE_PREFIX,to_acct)
-    toBalance = Get(ctx, toKey)
     if amount > approvedAmount:
         return False
     elif amount == approvedAmount:
@@ -246,7 +245,8 @@ def transferFrom(spender,from_acct,to_acct,amount):
     else:
         Put(ctx,approveKey,approvedAmount - amount)
         Put(ctx, fromKey, fromBalance - amount)
-
+        
+    toBalance = Get(ctx, toKey)
     Put(ctx, toKey, toBalance + amount)
 
     # Notify(["transfer", AddressToBase58(from_acct), AddressToBase58(to_acct), amount])
